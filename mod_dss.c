@@ -1,0 +1,175 @@
+/* All of these include files can be found in the Apache http source
+* tree in include/ . If you've got the Apache http server already
+* installed, then there will be an include directory either under the
+* directory that was specified with --prefix or somewhere in your
+* standard include paths. All the functions that you can make use of can be
+* found in the include files. */
+
+#include "httpd.h"
+#include "http_config.h"
+#include "http_core.h"
+#include "http_log.h"
+#include "http_main.h"
+#include "http_protocol.h"
+#include "http_request.h"
+#include "util_script.h"
+#include "http_connection.h"
+
+/* This example just takes a pointer to the request record as its only
+* argument */
+static int dss_handler(request_rec *r) {
+
+        /* We decline to handle a request if dss-handler is not the value
+         * of r->handler */
+        if (strcmp(r->handler, "dss-handler")) {
+               return DECLINED;
+        }
+
+        /* We set the content type before doing anything else */
+        ap_set_content_type(r, "text/html");
+
+        /* If the request is for a header only, and not a request for
+         * the whole content, then return OK now. We don't have to do
+         * anything else. */
+        if (r->header_only) {
+                return OK;
+        }
+
+        /*
+        const char *path = getenv("PATH_TRANSLATED" );
+
+            string valid_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
+            string line;
+
+            // linked list of key and value strings (key, val)
+            node *vals = NULL;
+            node *temp, *temp2;
+
+            size_t at_found;
+            size_t colon_found;
+            size_t end_found;
+
+            ifstream myfile (path);
+            if (myfile.is_open()) {
+                while (!myfile.eof() ) {
+                    getline(myfile, line);
+
+                    // find @
+                    at_found = line.find_first_of("@");
+
+                    if (at_found != string::npos) {
+                         // find :
+                        colon_found = line.find_first_of(":", at_found + 1);
+
+                        // if :
+                        if (colon_found != string::npos) {
+                            // find ; and store as last
+                            end_found = line.find_first_of(";", colon_found + 1);
+
+                            // take all from : to ; and remove starting and ending non-characters
+                            temp = new node;
+                            temp->key = line.substr(at_found + 1, colon_found - at_found - 1);
+                            temp->val = line.substr(colon_found + 1, end_found - colon_found - 1);
+                            temp->nxt = NULL;
+
+                            // store data
+                            if (vals == NULL)
+                                vals = temp;
+                            else {
+                                temp2 = vals;
+
+                                while (temp2->nxt != NULL) {
+                                    temp2 = temp2->nxt;
+                                }
+
+                                temp2->nxt = temp;
+                            }
+
+                        // else
+                        } else {
+                            // find next none character or ; and store as last
+                            end_found = line.find_first_not_of(valid_chars, at_found + 1);
+
+                            temp = vals;
+
+                            while (temp != NULL) {
+                                if (temp->key == line.substr(at_found + 1, end_found - at_found - 1)) {
+                                    // retrieve stored data and replace
+                                    line.replace(at_found, end_found - at_found, temp->val);
+
+                                    break;
+                                }
+                                temp = temp->nxt;
+                            }
+                        }
+                    }
+                    // loop through line again after last
+
+                    ap_rputs(line, r);
+                    ap_rputs("\n", r);
+                }
+
+                myfile.close();
+            } else {
+            	ap_log_error(APLOG_MARK, APLOG_NOERRNO|APLOG_NOTICE, 0, r->server,
+            			"mod_dss: %s", "Unable to open file");
+            }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* Now we just print the contents of the document using the
+         * ap_rputs and ap_rprintf functions. More information about
+         * the use of these can be found in http_protocol.h */
+        ap_rputs("<HTML>\n", r);
+		ap_rputs("\t<HEAD>\n", r);
+		ap_rputs("\t\t<TITLE>\n\t\t\tHello There\n\t\t</TITLE>\n", r);
+		ap_rputs("\t</HEAD>\n\n", r);
+		ap_rputs("<BODY BGCOLOR=\"#FFFFFF>\"\n" ,r);
+		ap_rputs("<H1>Hello </H1>\n", r);
+		ap_rputs("Hello world\n", r);
+		ap_rprintf(r, "<br>A sample line generated by ap_rprintf<br>\n");
+		ap_rputs("</BODY></HTML>\n" ,r);
+
+        /* We can either return OK or DECLINED at this point. If we return
+        * OK, then no other modules will attempt to process this request */
+        return OK;
+}
+
+
+/* Each function our module provides to handle a particular hook is
+* specified here. See mod_example.c for more information about this
+* step. Suffice to say that we need to list all of our handlers in
+* here. */
+static void x_register_hooks(apr_pool_t *p) {
+        ap_hook_handler(dss_handler, NULL, NULL, APR_HOOK_MIDDLE);
+}
+
+
+/* Module definition for configuration. We list all callback routines
+* that we provide the static hooks into our module from the other parts
+* of the server. This list tells the server what function will handle a
+* particular type or stage of request. If we don't provide a function
+* to handle a particular stage / callback, use NULL as a placeholder as
+* illustrated below. */
+module AP_MODULE_DECLARE_DATA dss_module = {
+        STANDARD20_MODULE_STUFF,
+        NULL, /* per-directory config creator */
+        NULL, /* directory config merger */
+        NULL, /* server config creator */
+        NULL, /* server config merger */
+        NULL, /* command table */
+        x_register_hooks, /* other request processing hooks */
+};

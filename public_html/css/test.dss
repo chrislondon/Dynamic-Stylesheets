@@ -1,0 +1,10 @@
+@primaryColor: #f00;
+@secondaryColor: #333;
+
+body {
+	background: @secondaryColor;
+}
+
+h1 {
+	color: @primaryColor;
+}

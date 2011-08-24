@@ -1,0 +1,13 @@
+To Compile:
+
+1 - Run this command in the Dynamic Style Sheets directory:
+		apxs -c -i -a mod_dss.c
+	* Note: When I ran apxs it installed the module in the wrong folder so I added
+	* a symbolic link in the correct folder
+		
+2 - In your Apache Configuration add:	
+		LoadModule dss_module modules/mod_dss.so
+		
+3 - In your Virtual Host file add:	
+		AddHandler dss-handler .dss
+	
