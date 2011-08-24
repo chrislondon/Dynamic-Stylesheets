@@ -1,13 +1,59 @@
-To Compile:
+=== Dynamic Stylesheets ===
+Contributors: chrislondon
+Donate (PayPal): payments@kwista.com
+Tags: dynamic stylesheets, dss
 
-1 - Run this command in the Dynamic Style Sheets directory:
+An apache module written in C to allow Dynamic Stylesheets
+
+== Description ==
+
+This module allows for you to create stylesheets with variables.
+
+== Compiling/Installing ==
+
+1 Run this command in the Dynamic Stylesheets directory:
 		apxs -c -i -a mod_dss.c
-	* Note: When I ran apxs it installed the module in the wrong folder so I added
-	* a symbolic link in the correct folder
+	* Note: When I ran apxs it installed the module in the wrong folder so I had
+	* to add a symbolic link in the correct folder
+
+== Installing ==
+
+1 In your Apache Configuration add:	
+	LoadModule dss_module modules/mod_dss.so
 		
-2 - In your Apache Configuration add:	
-		LoadModule dss_module modules/mod_dss.so
-		
-3 - In your Virtual Host file add:	
-		AddHandler dss-handler .dss
+2 In your Virtual Host file add:	
+	AddHandler dss-handler .dss
 	
+== Usage ==
+
+Create a regular css file with the extension of .dss.  Create variables using
+the following syntax:
+
+	@{variable}:{value};
+	
+Then in the rest of the css file use the following syntax to recall the variable:
+
+	@{variable};
+
+== Example ==
+
+	@primaryColor: #ccc;
+	@secondaryColor: #333;
+	
+	body {
+		background: @secondaryColor;
+	}
+	
+	h1 {
+		color: @primaryColor;
+	}
+
+... becomes ...
+
+	body {
+		background: #333;
+	}
+	
+	h1 {
+		color: #ccc;
+	}

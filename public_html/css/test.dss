@@ -1,4 +1,4 @@
-@primaryColor: #f00;
+@primaryColor: #ccc;
 @secondaryColor: #333;
 
 body {
