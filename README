@@ -33,7 +33,9 @@ the following syntax:
 	
 Then in the rest of the css file use the following syntax to recall the variable:
 
+'''css
 	@{variable};
+'''
 
 == Example ==
 
